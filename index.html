@@ -47,6 +47,20 @@
             padding: 10px;
             cursor: pointer;
         }
+
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .card img {
+            max-width: 100%;
+            height: auto;
+        }
     </style>
 </head>
 <body>
@@ -76,18 +90,43 @@
                 var url = "https://pokeapi.co/api/v2/pokemon/" + nombrePokemon;
 
                 fetch(url)
-                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('No se encontró el Pokémon');
+                        }
+                        return response.json();
+                    })
                     .then(data => mostrarResultado(data))
-                    .catch(error => console.error('Error:', error));
+                    .catch(error => mostrarError(error));
             } else {
-                alert("Por favor, ingresa el nombre del Pokémon.");
+                // Si no se proporciona un nombre específico, muestra resultados generales.
+                var url = "https://pokeapi.co/api/v2/pokemon?limit=10";
+
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => mostrarResultadosGenerales(data.results))
+                    .catch(error => mostrarError(error));
             }
         }
 
         function mostrarResultado(data) {
             var resultado = document.getElementById("resultado");
-            resultado.innerHTML = "<h2>" + data.name + "</h2>";
-            resultado.innerHTML += "<img src='" + data.sprites.front_default + "' alt='" + data.name + "'>";
+            resultado.innerHTML = "<div class='card'><h2>" + data.name + "</h2>";
+            resultado.innerHTML += "<img src='" + data.sprites.front_default + "' alt='" + data.name + "'></div>";
+        }
+
+        function mostrarResultadosGenerales(results) {
+            var resultado = document.getElementById("resultado");
+            resultado.innerHTML = "<h2>Resultados Generales</h2>";
+
+            results.forEach(pokemon => {
+                resultado.innerHTML += "<div class='card'>" + pokemon.name + "</div>";
+            });
+        }
+
+        function mostrarError(error) {
+            var resultado = document.getElementById("resultado");
+            resultado.innerHTML = "<p>Error: " + error.message + "</p>";
         }
     </script>
 </body>
