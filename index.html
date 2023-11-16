@@ -97,7 +97,7 @@
                         return response.json();
                     })
                     .then(data => mostrarResultado(data))
-                    .catch(error => mostrarError(error));
+                    .catch(error => mostrarError(error.message));
             } else {
                 // Si no se proporciona un nombre específico, muestra resultados generales.
                 var url = "https://pokeapi.co/api/v2/pokemon?limit=10";
@@ -105,7 +105,7 @@
                 fetch(url)
                     .then(response => response.json())
                     .then(data => mostrarResultadosGenerales(data.results))
-                    .catch(error => mostrarError(error));
+                    .catch(error => mostrarError(error.message));
             }
         }
 
@@ -124,9 +124,9 @@
             });
         }
 
-        function mostrarError(error) {
+        function mostrarError(errorMessage) {
             var resultado = document.getElementById("resultado");
-            resultado.innerHTML = "<p>Error: " + error.message + "</p>";
+            resultado.innerHTML = "<p>" + errorMessage + "</p>";
         }
     </script>
 </body>
