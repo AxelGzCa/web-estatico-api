@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Primera Página Web</title>
+    <title>Mi Pokedex</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -33,26 +33,62 @@
             width: 100%;
         }
 
-        @media screen and (max-width: 600px) {
-            header, footer {
-                padding: 0.5em;
-            }
+        .search-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 200px;
+        }
+
+        button {
+            padding: 10px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Mi Primera Página Web</h1>
+        <h1>Mi Pokedex</h1>
     </header>
 
     <main>
-        <p>Bienvenido a mi primera página web.</p>
+        <div class="search-container">
+            <input type="text" id="pokemonName" placeholder="Nombre del Pokémon">
+            <button onclick="buscarPokemon()">Buscar</button>
+        </div>
+
+        <div id="resultado"></div>
     </main>
 
     <footer>
         Hecho por Axel Gomez Cordoba
     </footer>
 
+    <script>
+        function buscarPokemon() {
+            var nombrePokemon = document.getElementById("pokemonName").value.toLowerCase();
+
+            if (nombrePokemon !== "") {
+                var url = "https://pokeapi.co/api/v2/pokemon/" + nombrePokemon;
+
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => mostrarResultado(data))
+                    .catch(error => console.error('Error:', error));
+            } else {
+                alert("Por favor, ingresa el nombre del Pokémon.");
+            }
+        }
+
+        function mostrarResultado(data) {
+            var resultado = document.getElementById("resultado");
+            resultado.innerHTML = "<h2>" + data.name + "</h2>";
+            resultado.innerHTML += "<img src='" + data.sprites.front_default + "' alt='" + data.name + "'>";
+        }
+    </script>
 </body>
 </html>
