@@ -60,6 +60,8 @@
         .card img {
             max-width: 100%;
             height: auto;
+            border-radius: 8px;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -112,7 +114,8 @@
         function mostrarResultado(data) {
             var resultado = document.getElementById("resultado");
             resultado.innerHTML = "<div class='card'><h2>" + data.name + "</h2>";
-            resultado.innerHTML += "<img src='" + data.sprites.front_default + "' alt='" + data.name + "'></div>";
+            resultado.innerHTML += "<img src='" + data.sprites.front_default + "' alt='" + data.name + "'>";
+            resultado.innerHTML += "</div>";
         }
 
         function mostrarResultadosGenerales(results) {
@@ -120,13 +123,22 @@
             resultado.innerHTML = "<h2>Resultados Generales</h2>";
 
             results.forEach(pokemon => {
-                resultado.innerHTML += "<div class='card'>" + pokemon.sprites + pokemon.name + "</div>";
+                resultado.innerHTML += "<div class='card'>" +
+                                       "<h3>" + pokemon.name + "</h3>" +
+                                       "<img src='https://pokeapi.co/media/sprites/pokemon/" + getPokemonIdFromUrl(pokemon.url) + ".png' alt='" + pokemon.name + "'>" +
+                                       "</div>";
             });
         }
 
         function mostrarError(errorMessage) {
             var resultado = document.getElementById("resultado");
             resultado.innerHTML = "<p>" + errorMessage + "</p>";
+        }
+
+        function getPokemonIdFromUrl(url) {
+            // Extraer el ID del Pokémon a partir de la URL
+            var parts = url.split('/');
+            return parts[parts.length - 2];
         }
     </script>
 </body>
