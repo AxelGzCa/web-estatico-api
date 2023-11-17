@@ -12,7 +12,7 @@
             box-sizing: border-box;
         }
 
-        header {
+        header, footer {
             background-color: #333;
             color: #fff;
             text-align: center;
@@ -21,16 +21,6 @@
 
         main {
             padding: 20px;
-        }
-
-        footer {
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            padding: 1em;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
         }
 
         .search-container {
@@ -75,6 +65,7 @@
         <div class="search-container">
             <input type="text" id="pokemonName" placeholder="Nombre del Pokémon">
             <button onclick="buscarPokemon()">Buscar</button>
+            <button onclick="buscarAleatorio()">Aleatorio</button>
         </div>
 
         <div id="resultado"></div>
@@ -88,39 +79,42 @@
         function buscarPokemon() {
             var nombrePokemon = document.getElementById("pokemonName").value.trim().toLowerCase();
 
-            if (nombrePokemon !== "") {
-                var url = "https://pokeapi.co/api/v2/pokemon/" + nombrePokemon;
+            var url = nombrePokemon
+                ? `https://pokeapi.co/api/v2/pokemon/${nombrePokemon}`
+                : "https://pokeapi.co/api/v2/pokemon?limit=10";
 
-                fetch(url)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('No se encontró el Pokémon');
-                        }
-                        return response.json();
-                    })
-                    .then(data => mostrarResultado(data))
-                    .catch(error => mostrarError(error.message));
-            } else {
-                // Si no se proporciona un nombre específico, muestra resultados generales.
-                var url = "https://pokeapi.co/api/v2/pokemon?limit=10";
+            realizarBusqueda(url);
+        }
 
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => mostrarResultadosGenerales(data.results))
-                    .catch(error => mostrarError(error.message));
-            }
+        function buscarAleatorio() {
+            var idAleatorio = Math.floor(Math.random() * 898) + 1;
+            var url = `https://pokeapi.co/api/v2/pokemon/${idAleatorio}`;
+
+            realizarBusqueda(url);
+        }
+
+        function realizarBusqueda(url) {
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('No se encontró el Pokémon');
+                    }
+                    return response.json();
+                })
+                .then(data => mostrarResultado(data))
+                .catch(error => mostrarError(error.message));
         }
 
         function mostrarResultado(data) {
             var resultado = document.getElementById("resultado");
             resultado.innerHTML = "";
-            
+
             var card = document.createElement("div");
             card.className = "card";
-            
+
             var nombre = document.createElement("h2");
             nombre.textContent = data.name;
-            
+
             var imagen = document.createElement("img");
             imagen.src = data.sprites.front_default;
             imagen.alt = data.name;
@@ -130,36 +124,9 @@
             resultado.appendChild(card);
         }
 
-        function mostrarResultadosGenerales(results) {
-            var resultado = document.getElementById("resultado");
-            resultado.innerHTML = "<h2>Resultados Generales</h2>";
-
-            results.forEach(pokemon => {
-                var card = document.createElement("div");
-                card.className = "card";
-
-                var nombre = document.createElement("h3");
-                nombre.textContent = pokemon.name;
-
-                var imagen = document.createElement("img");
-                imagen.src = 'https://pokeapi.co/media/sprites/pokemon/' + getPokemonIdFromUrl(pokemon.url) + '.png';
-                imagen.alt = pokemon.name;
-
-                card.appendChild(nombre);
-                card.appendChild(imagen);
-                resultado.appendChild(card);
-            });
-        }
-
         function mostrarError(errorMessage) {
             var resultado = document.getElementById("resultado");
-            resultado.innerHTML = "<p>" + errorMessage + "</p>";
-        }
-
-        function getPokemonIdFromUrl(url) {
-            // Extraer el ID del Pokémon a partir de la URL
-            var parts = url.split('/');
-            return parts[parts.length - 2];
+            resultado.innerHTML = `<p>${errorMessage}</p>`;
         }
     </script>
 </body>
