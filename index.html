@@ -86,7 +86,7 @@
 
     <script>
         function buscarPokemon() {
-            var nombrePokemon = document.getElementById("pokemonName").value.toLowerCase();
+            var nombrePokemon = document.getElementById("pokemonName").value.trim().toLowerCase();
 
             if (nombrePokemon !== "") {
                 var url = "https://pokeapi.co/api/v2/pokemon/" + nombrePokemon;
