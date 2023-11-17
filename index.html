@@ -113,9 +113,21 @@
 
         function mostrarResultado(data) {
             var resultado = document.getElementById("resultado");
-            resultado.innerHTML = "<div class='card'><h2>" + data.name + "</h2>";
-            resultado.innerHTML += "<img src='" + data.sprites.front_default + "' alt='" + data.name + "'>";
-            resultado.innerHTML += "</div>";
+            resultado.innerHTML = "";
+            
+            var card = document.createElement("div");
+            card.className = "card";
+            
+            var nombre = document.createElement("h2");
+            nombre.textContent = data.name;
+            
+            var imagen = document.createElement("img");
+            imagen.src = data.sprites.front_default;
+            imagen.alt = data.name;
+
+            card.appendChild(nombre);
+            card.appendChild(imagen);
+            resultado.appendChild(card);
         }
 
         function mostrarResultadosGenerales(results) {
@@ -123,10 +135,19 @@
             resultado.innerHTML = "<h2>Resultados Generales</h2>";
 
             results.forEach(pokemon => {
-                resultado.innerHTML += "<div class='card'>" +
-                                       "<h3>" + pokemon.name + "</h3>" +
-                                       "<img src='https://pokeapi.co/media/sprites/pokemon/" + getPokemonIdFromUrl(pokemon.url) + ".png' alt='" + pokemon.name + "'>" +
-                                       "</div>";
+                var card = document.createElement("div");
+                card.className = "card";
+
+                var nombre = document.createElement("h3");
+                nombre.textContent = pokemon.name;
+
+                var imagen = document.createElement("img");
+                imagen.src = 'https://pokeapi.co/media/sprites/pokemon/' + getPokemonIdFromUrl(pokemon.url) + '.png';
+                imagen.alt = pokemon.name;
+
+                card.appendChild(nombre);
+                card.appendChild(imagen);
+                resultado.appendChild(card);
             });
         }
 
